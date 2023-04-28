@@ -1,0 +1,119 @@
+CODE:
+ create the database &quot;bank&quot;
+mysql&gt; CREATE DATABASE bank;
+ use the database bank:
+mysql&gt; USE bank;
+ Creating table customer
+CREATE TABLE customer
+(
+custid VARCHAR(6),
+fname VARCHAR(30),
+mname VARCHAR(30),
+ltname VARCHAR(30),
+city VARCHAR(15),
+mobileno VARCHAR(10),
+occupation VARCHAR(10),
+dob DATE,
+CONSTRAINT customer_custid_pk PRIMARY KEY(custid)
+);
+ Creating table branch
+CREATE TABLE branch
+(
+bid VARCHAR(6),
+bname VARCHAR(30),
+bcity VARCHAR(30),
+CONSTRAINT branch_bid_pk PRIMARY KEY(bid)
+);
+ Creating table account
+CREATE TABLE account
+(
+acnumber VARCHAR(6),
+custid VARCHAR(6),
+bid VARCHAR(6),
+opening_balance INT(7),
+aod DATE,
+atype VARCHAR(10),
+astatus VARCHAR(10),
+CONSTRAINT account_acnumber_pk PRIMARY KEY(acnumber),
+CONSTRAINT account_custid_fk FOREIGN KEY(custid) REFERENCES
+customer(custid),
+
+CONSTRAINT account_bid_fk FOREIGN KEY(bid) REFERENCES branch(bid)
+);
+
+ Creating table Tran details
+CREATE TABLE trandetails
+(
+tnumber VARCHAR(6),
+acnumber VARCHAR(6),
+dot DATE,
+medium_of_transaction VARCHAR(20),
+transaction_type VARCHAR(20),
+transaction_amount INT(7),
+CONSTRAINT trandetails_tnumber_pk PRIMARY KEY(tnumber),
+CONSTRAINT trandetails_acnumber_fk FOREIGN KEY(acnumber) REFERENCES
+account(acnumber)
+);
+
+ Creating table loan
+CREATE TABLE loan
+(
+custid VARCHAR(6),
+bid VARCHAR(6),
+loan_amount INT(7),
+CONSTRAINT loan_customer_custid_bid_pk PRIMARY KEY(custid,bid),
+CONSTRAINT loan_custid_fk FOREIGN KEY(custid) REFERENCES customer(custid),
+CONSTRAINT loan_bid_fk FOREIGN KEY(bid) REFERENCES branch(bid)
+);
+
+Inserting Record:
+
+INSERT INTO customer
+VALUES(&#39;C00001&#39;,&#39;Ramesh&#39;,&#39;Chandra&#39;,&#39;Sharma&#39;,&#39;Delhi&#39;,&#39;9543198345&#39;,&#39;Service&#39;,&#39;1976-12-06&#39;);
+INSERT INTO customer
+VALUES(&#39;C00002&#39;,&#39;Avinash&#39;,&#39;Sunder&#39;,&#39;Minha&#39;,&#39;Delhi&#39;,&#39;9876532109&#39;,&#39;Service&#39;,&#39;1974-10-16&#39;);
+INSERT INTO customer
+VALUES(&#39;C00003&#39;,&#39;Rahul&#39;,null,&#39;Rastogi&#39;,&#39;Delhi&#39;,&#39;9765178901&#39;,&#39;Student&#39;,&#39;1981-09-26&#39;);
+INSERT INTO customer
+VALUES(&#39;C00004&#39;,&#39;Parul&#39;,null,&#39;Gandhi&#39;,&#39;Delhi&#39;,&#39;9876532109&#39;,&#39;Housewife&#39;,&#39;1976-11-03&#39;);
+
+ Inserting records into the branch table:
+INSERT INTO branch VALUES(&#39;B00001&#39;,&#39;Asaf ali road&#39;,&#39;Delhi&#39;);
+INSERT INTO branch VALUES(&#39;B00002&#39;,&#39;New delhi main branch&#39;,&#39;Delhi&#39;);
+INSERT INTO branch VALUES(&#39;B00003&#39;,&#39;Delhi cantt&#39;,&#39;Delhi&#39;);
+
+INSERT INTO branch VALUES(&#39;B00004&#39;,&#39;Jasola&#39;,&#39;Delhi&#39;);
+
+ Inserting records into the account table:
+INSERT INTO account VALUES(&#39;A00001&#39;,&#39;C00001&#39;,&#39;B00001&#39;,1000,&#39;2012-12-
+15&#39;,&#39;Saving&#39;,&#39;Active&#39;);
+INSERT INTO account VALUES(&#39;A00002&#39;,&#39;C00002&#39;,&#39;B00001&#39;,1000,&#39;2012-06-
+12&#39;,&#39;Saving&#39;,&#39;Active&#39;);
+INSERT INTO account VALUES(&#39;A00003&#39;,&#39;C00003&#39;,&#39;B00002&#39;,1000,&#39;2012-05-
+17&#39;,&#39;Saving&#39;,&#39;Active&#39;);
+INSERT INTO account VALUES(&#39;A00004&#39;,&#39;C00002&#39;,&#39;B00005&#39;,1000,&#39;2013-01-
+27&#39;,&#39;Saving&#39;,&#39;Active&#39;);
+
+ Inserting records into the Tran details table:
+INSERT INTO trandetails VALUES(&#39;T00001&#39;,&#39;A00001&#39;,&#39;2013-01-
+01&#39;,&#39;Cheque&#39;,&#39;Deposit&#39;,2000);
+INSERT INTO trandetails VALUES(&#39;T00002&#39;,&#39;A00001&#39;,&#39;2013-02-
+01&#39;,&#39;Cash&#39;,&#39;Withdrawal&#39;,1000);
+INSERT INTO trandetails VALUES(&#39;T00003&#39;,&#39;A00002&#39;,&#39;2013-01-01&#39;,&#39;Cash&#39;,&#39;Deposit&#39;,2000);
+INSERT INTO trandetails VALUES(&#39;T00004&#39;,&#39;A00002&#39;,&#39;2013-02-01&#39;,&#39;Cash&#39;,&#39;Deposit&#39;,3000);
+INSERT INTO trandetails VALUES(&#39;T00005&#39;,&#39;A00007&#39;,&#39;2013-01-11&#39;,&#39;Cash&#39;,&#39;Deposit&#39;,7000);
+
+ Inserting records into the Tran details table:
+INSERT INTO loan VALUES(&#39;C00001&#39;,&#39;B00001&#39;,100000);
+INSERT INTO loan VALUES(&#39;C00002&#39;,&#39;B00002&#39;,200000);
+INSERT INTO loan VALUES(&#39;C00009&#39;,&#39;B00008&#39;,400000);
+INSERT INTO loan VALUES(&#39;C00010&#39;,&#39;B00009&#39;,500000)
+
+NORMALIZATION OF DATABASE :
+ In the Table customers the data is not arranged according to any order. therefore we
+use the sort function to arrange the records according to the date of birth allowing us
+to the easily identify the young and elderly customers of the bank
+Query:
+ SELECT custid, fname, mname,dob
+FROM customer
+ORDER BY EXTRACT(year FROM dob), ASC;
